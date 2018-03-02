@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, request
 from flask import url_for, session, logging
 from data import Articles
 from flask_mysqldb import MySQL
@@ -41,6 +41,14 @@ def articles():
 @app.route('/article/<string:id>')
 def article(id):
     return render_template('article.html', id=id)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        return render_template('register.html')
+    return render_template('register.html', form=form)
 
 
 if __name__ == '__main__':

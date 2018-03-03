@@ -11,7 +11,7 @@ script:
   # - behave
   # - coverage erase
   # - coverage run test_webapp.py && coverage html
-  - pylint --output-format=text app.py
+  - pylint app.py
 
 after_success:
   - codecov

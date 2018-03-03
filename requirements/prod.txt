@@ -1,5 +1,7 @@
 # Flask
 Flask==0.12.2
+flask_mysqldb
+passlib
 
 # Deployment
 gunicorn==19.7.1

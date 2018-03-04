@@ -9,5 +9,6 @@ gunicorn==19.7.1
 # Test
 behave==1.2.5
 WebTest==2.0.29
+unittest2
 #only in python 2.7
 mock==2.0.0

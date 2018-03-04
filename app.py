@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, flash, redirect, request
 from flask import url_for, session, logging
-from data import Articles
+#from data import Articles
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField
 from wtforms import PasswordField, validators
@@ -20,7 +20,7 @@ class RegisterForm(Form):
 
 class ArticleForm(Form):
     title = StringField('Title', [validators.Length(min=6, max=255)])
-    body = TextAreaField('Username', [validators.Length(min=30)])
+    body = TextAreaField('Body', [validators.Length(min=30)])
 
 
 
@@ -36,7 +36,7 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # Init MySQL
 mysql = MySQL(app)
 
-Articles = Articles()
+#Articles = Articles()
 
 
 @app.route('/')
@@ -51,7 +51,19 @@ def about():
 
 @app.route('/articles')
 def articles():
-    return render_template('articles.html', articles=Articles)
+    cur = mysql.connection.cursor()
+
+    result = cur.execute("SELECT * FROM articles")
+
+    articles = cur.fetchall()
+
+    if result > 0:
+        return render_template('articles.html', articles = articles)
+    else:
+        msg = 'No Articles Found'
+        return render_template('articles.html', msg=msg)
+
+    cur.close()
 
 
 @app.route('/article/<string:id>')
@@ -134,7 +146,7 @@ def is_logged_in(f):
             flash('Unauthorized. Please log in', 'danger')
             return redirect(url_for('login'))
     return wrap
-    
+
 # Logout
 @app.route('/logout')
 @is_logged_in
@@ -147,7 +159,21 @@ def logout():
 @app.route('/dashboard')
 @is_logged_in
 def dashboard():
-    return render_template('dashboard.html')
+
+    cur = mysql.connection.cursor()
+
+    result = cur.execute("SELECT * FROM articles")
+
+    articles = cur.fetchall()
+
+    if result > 0:
+        return render_template('dashboard.html', articles = articles)
+    else:
+        msg = 'No Articles Found'
+        return render_template('dashboard.html', msg=msg)
+
+    cur.close()
+
 
 # Add Article Route
 @app.route('/add_article', methods=['GET', 'POST'])
@@ -170,7 +196,7 @@ def add_article():
 
         return redirect(url_for('dashboard'))
 
-    return render_template('add_article', form=form)
+    return render_template('add_article.html', form=form)
 
 
 if __name__ == '__main__':

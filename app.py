@@ -76,7 +76,7 @@ def register():
 
         flash('You are registered and can log in', 'success')
 
-        redirect(url_for('index'))
+        return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
 
@@ -118,6 +118,14 @@ def login():
 
     return render_template('login.html')
 
+# Logout
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You are logged out', 'success')
+    return redirect(url_for('login'))
+
+# Dashboard
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')

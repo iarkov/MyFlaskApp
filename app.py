@@ -68,7 +68,11 @@ def articles():
 
 @app.route('/article/<string:id>')
 def article(id):
-    return render_template('article.html', id=id)
+    cur = mysql.connection.cursor()
+
+    result = cur.execute("SELECT * FROM articles WHERE id = %s", [id])
+    article = cur.fetchone()
+    return render_template('article.html', article=article)
 
 
 @app.route('/register', methods=['GET', 'POST'])
